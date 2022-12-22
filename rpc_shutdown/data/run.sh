@@ -14,6 +14,7 @@ while read -r input; do
         CREDENTIALS=$(bashio::config "computers[${computer}].credentials")
         DELAY=$(bashio::config "computers[${computer}].delay")
         MESSAGE=$(bashio::config "computers[${computer}].message")
+        EXTRA=$(bashio::config "computers[${computer}].extra")
   
         # Not the correct alias
         if ! bashio::var.equals "$ALIAS" "$input"; then
@@ -26,7 +27,7 @@ while read -r input; do
         fi
 
         bashio::log.info "Shutdown $input -> $ADDRESS"
-        if ! msg="$(net rpc shutdown -I "$ADDRESS" -U "$CREDENTIALS" -t "$DELAY" -C "$MESSAGE")"; then
+        if ! msg="$(net rpc shutdown $EXTRA -I "$ADDRESS" -U "$CREDENTIALS" -t "$DELAY" -C "$MESSAGE")"; then
             bashio::log.error "Shutdown fails -> $msg"
         fi
     done
